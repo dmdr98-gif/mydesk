@@ -1,3 +1,15 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+# everywhere
+
+everywhere는 RustDesk 기반의 독립 원격 데스크톱 포크입니다. 제품 표시명은
+항상 소문자 `everywhere`이며, 저장소 이름은 `mydesk`입니다.
+RustDesk의 원저작권 및 제3자 고지를 유지하고 AGPL-3.0에 따라 배포합니다.
+[라이선스 전문](LICENCE), [오픈소스 고지](NOTICE.md),
+[업스트림 기준](UPSTREAM.md), [브랜딩 예외 및 확인 항목](branding/ALLOWLIST.md)을 참고하세요.
+
+아래는 출처와 빌드 참고를 위해 보존한 **업스트림 RustDesk README**입니다.
+아래의 다운로드·서버·커뮤니티 링크는 업스트림을 가리킵니다.
+
 <p align="center">
   <img src="res/logo-header.svg" alt="RustDesk - Your remote desktop"><br>
   <a href="#raw-steps-to-build">Build</a> •

@@ -118,7 +118,7 @@ pub use verified_update::{
     update_to_verified, VerifiedUpdateFile,
 };
 
-pub const FLUTTER_RUNNER_WIN32_WINDOW_CLASS: &'static str = "FLUTTER_RUNNER_WIN32_WINDOW"; // main window, install window
+pub const FLUTTER_RUNNER_WIN32_WINDOW_CLASS: &'static str = "EVERYWHERE_FLUTTER_RUNNER_WIN32_WINDOW"; // main window, install window
 pub const EXPLORER_EXE: &'static str = "explorer.exe";
 pub const SET_FOREGROUND_WINDOW: &'static str = "SET_FOREGROUND_WINDOW";
 
@@ -4021,7 +4021,8 @@ pub fn handle_service_control() -> Option<std::process::ExitCode> {
         std::process::ExitCode::SUCCESS
     } else {
         eprintln!(
-            "RustDesk service control failed: {}",
+            "{} service control failed: {}",
+            crate::get_app_name(),
             std::io::Error::from_raw_os_error(error as i32)
         );
         std::process::ExitCode::FAILURE
@@ -4201,7 +4202,7 @@ pub fn message_box(text: &str) {
         .encode_utf16()
         .chain(std::iter::once(0))
         .collect::<Vec<u16>>();
-    let caption = "RustDesk Output"
+    let caption = format!("{} Output", crate::get_app_name())
         .encode_utf16()
         .chain(std::iter::once(0))
         .collect::<Vec<u16>>();

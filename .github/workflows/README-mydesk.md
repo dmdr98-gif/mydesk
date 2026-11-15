@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-only -->
-# MyDesk Windows CI
+# everywhere Windows CI
 
-`windows-build.yml`이 MyDesk 자동 빌드 진입점이다. `main`, `master`,
+`windows-build.yml`이 everywhere 자동 빌드 진입점이다. `main`, `master`,
 `task/**` push, 모든 pull request, 수동 실행을 지원한다. Windows x64
 (`windows-2022`, `x86_64-pc-windows-msvc`)만 제품으로 빌드한다.
 
@@ -22,7 +22,7 @@
   업스트림 x64의 vram 옵션을 유지한다. WindowInjection.dll을 추가한 뒤
   포터블 EXE를 다시 패킹해 MSI와 같은 앱 파일을 포함한다.
 - `res/msi`에서 preprocess, NuGet 복원, x64 MSBuild를 수행한다.
-  `mydesk-windows-x64` 아티팩트에 EXE/MSI를 14일 보관한다.
+  `everywhere-windows-x64` 아티팩트에 EXE/MSI를 14일 보관한다.
   중간 브리지/DLL 아티팩트도 14일 보관한다.
 - 릴리스 게시, nightly 태그, 서명 서버 호출, 템플릿 패키지는 제외했다.
   새 워크플로에는 비밀값이나 서명 단계가 없다. P9에서 자체 서명을 추가한다.
@@ -52,13 +52,16 @@
 - GitHub Actions에서 브리지 생성, 엔진 다운로드, 캐시 cold/warm 빌드,
   EXE 패킹 및 MSI 생성을 확인해야 한다. Linux에서 Windows 빌드는 실행하지 않았다.
 - Windows 10/11 x64에서 EXE 실행, MSI 설치/제거, ID 표시 및 기본 원격 연결을
-  확인해야 한다. 결과물은 현재 RustDesk 이름을 유지하며 서명되지 않는다.
-- TODO: P1 브랜딩, P4/P9 드라이버 검토, P9 자체 서명/업데이트.
+  확인해야 한다. 결과물은 everywhere 이름을 사용하며 서명되지 않는다.
+- TODO: E1 실기 검증, P4/P9 드라이버 검토, P9 자체 서명/업데이트.
 
 ## 회귀 영향 범위
 
-기존 앱/Rust/Dart 런타임 경로는 변경하지 않았다. 위 기존 워크플로의
-자동 트리거와 Flutter 래퍼의 수동 실행 동작만 변경했다. 포크에서 불필요한
+CI 워크플로 변경은 원격 세션 로직을 바꾸지 않는다. 위 기존 워크플로의
+자동 트리거와 Flutter 래퍼의 수동 실행 동작을 조정했다. 포크에서 불필요한
 다중 플랫폼 빌드/게시가 자동 실행되지 않도록 하기 위한 필수 변경이다.
 재사용 DLL 빌드는 기존 동작을 유지하며 아티팩트 보존 기간만 변경했다.
 커밋, push, 저장소 생성, 릴리스 게시는 수행하지 않는다.
+
+E1 제품명·산출물 경로 변경의 전체 파일 목록과 회귀 영향은
+[branding/REVIEW.md](../../branding/REVIEW.md)에 기록한다.

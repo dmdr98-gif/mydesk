@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-only -->
-# MyDesk 오픈소스 고지
+# everywhere 오픈소스 고지
 
-MyDesk는 RustDesk를 기반으로 한 독립 포크이다. 원저작자와 기여자의 저작권,
+everywhere는 RustDesk를 기반으로 한 독립 포크이다. 원저작자와 기여자의 저작권,
 라이선스 및 제3자 고지를 유지한다. 원본 기준 해시는 [UPSTREAM.md](UPSTREAM.md)에 기록한다.
 RustDesk의 기존 저작권 표기에는 Purslane Tech Pte. Ltd.가 포함되어 있으며,
 이 문서는 기존 파일의 고지를 대체하거나 저작권을 이전하지 않는다.
@@ -45,10 +45,10 @@ Rust 의존성은 `Cargo.toml`, 각 workspace manifest 및 `Cargo.lock`, Flutter
 
 ## 상표와 독립성
 
-**RustDesk 상표 미사용**: MyDesk 제품의 이름·로고·홍보에 RustDesk 상표를 사용하지
+**RustDesk 상표 미사용**: everywhere 제품의 이름·로고·홍보에 RustDesk 상표를 사용하지
 않으며 RustDesk 측의 공식 제품, 제휴 또는 보증을 의미하지 않는다. 출처와 저작권을
-설명하기 위한 문서상 명칭은 유지한다. 현재 P0 기준 소스에는 기존 UI·리소스의
-RustDesk 브랜딩이 남아 있으므로 제품 배포 전 P1 브랜딩 작업으로 교체해야 한다.
+설명하기 위한 문서상 명칭은 유지한다. Windows·Android 제품 브랜딩은 everywhere로 교체한다. 호환 식별자와
+업스트림 문서·드라이버·고지 예외는 [branding/ALLOWLIST.md](branding/ALLOWLIST.md)에 기록한다.
 
 StarDesk(GearUP)의 코드·바이너리·드라이버·리소스·문자열은 복사하지 않는다.
 이 포크는 오픈소스와 공개 문서만을 사용한다.
@@ -60,4 +60,4 @@ StarDesk(GearUP)의 코드·바이너리·드라이버·리소스·문자열은 
   각 라이선스 전문, 저작권 고지 및 필요한 소스를 배포 패키지에 포함한다.
 - hbb_common의 별도 라이선스 근거와 scrap의 원문 고지를 확보하고,
   FFmpeg/HW SDK/드라이버의 실제 빌드·재배포 조건을 확인한다.
-- P1에서 제품명·로고·설치 파일의 기존 브랜딩을 교체한다.
+- Windows·Android 실기에서 E1 브랜딩을 확인하고 P1-03의 업스트림 링크·업데이트 정책을 확정한다.

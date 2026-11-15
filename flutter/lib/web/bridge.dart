@@ -872,7 +872,8 @@ class RustdeskImpl {
   }
 
   String mainGetAppNameSync({dynamic hint}) {
-    return js.context.callMethod('getByName', ['app-name']);
+    final String? name = js.context.callMethod('getByName', ['app-name']);
+    return name == null || name.isEmpty || name == 'RustDesk' ? 'everywhere' : name;
   }
 
   String mainUriPrefixSync({dynamic hint}) {
@@ -1525,10 +1526,14 @@ class RustdeskImpl {
 
   String translate(
       {required String name, required String locale, dynamic hint}) {
-    return js.context.callMethod('getByName', [
+    final String text = js.context.callMethod('getByName', [
       'translate',
       jsonEncode({'locale': locale, 'text': name})
     ]);
+    if (name == 'powered_by_me' || name.startsWith('upgrade_rustdesk_server_pro')) {
+      return text;
+    }
+    return text.replaceAll('RustDesk', mainGetAppNameSync(hint: hint));
   }
 
   int sessionGetRgbaSize(

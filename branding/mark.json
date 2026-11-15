@@ -1,0 +1,14 @@
+{
+  "license": "SPDX-License-Identifier: AGPL-3.0-only",
+  "background": "#0f766e",
+  "foreground": "#ffffff",
+  "glyph": [
+    "01110",
+    "11011",
+    "10001",
+    "11111",
+    "10000",
+    "11001",
+    "01110"
+  ]
+}

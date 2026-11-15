@@ -165,7 +165,7 @@ jobs:
 
       - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
         with:
-          prefix-key: mydesk-windows-x64
+          prefix-key: everywhere-windows-x64
 
       - name: Setup vcpkg with Github Actions binary cache
         uses: lukka/run-vcpkg@b1a0dd252f06b9e25b3c022a9a03bd7a427fb6a2 # v11
@@ -198,13 +198,13 @@ jobs:
         run: |
           python3 .\build.py --portable --flutter --hwcodec --vram
           if ($LASTEXITCODE -ne 0) { throw "Application build failed" }
-          Move-Item ./flutter/build/windows/x64/runner/Release ./rustdesk
+          Move-Item ./flutter/build/windows/x64/runner/Release ./everywhere
 
       - name: Restore WindowInjection DLL
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: topmostwindow-artifacts-x64
-          path: ./rustdesk
+          path: ./everywhere
 
       - name: Build final portable executable with WindowInjection DLL
         shell: bash
@@ -213,10 +213,10 @@ jobs:
           find flutter/build -name Runner.res -exec cp '{}' libs/portable/Runner.res \;
           pushd libs/portable
           python3 -m pip install -r requirements.txt
-          python3 generate.py -f ../../rustdesk/ -o . -e ../../rustdesk/rustdesk.exe
+          python3 generate.py -f ../../everywhere/ -o . -e ../../everywhere/everywhere.exe
           popd
           mkdir -p artifacts
-          mv target/release/rustdesk-portable-packer.exe artifacts/rustdesk-${{ env.VERSION }}-x86_64.exe
+          mv target/release/rustdesk-portable-packer.exe artifacts/everywhere-${{ env.VERSION }}-x86_64.exe
 
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce # v2
@@ -224,20 +224,20 @@ jobs:
       - name: Build MSI
         run: |
           Push-Location res/msi
-          python3 preprocess.py --arp -d ../../rustdesk
+          python3 preprocess.py --arp -d ../../everywhere
           if ($LASTEXITCODE -ne 0) { throw "MSI preprocessing failed" }
           nuget restore msi.sln
           if ($LASTEXITCODE -ne 0) { throw "NuGet restore failed" }
           msbuild msi.sln -p:Configuration=Release -p:Platform=x64 /p:TargetVersion=Windows10
           if ($LASTEXITCODE -ne 0) { throw "MSI build failed" }
           $msi = Get-Item ./Package/bin/x64/Release/en-us/Package.msi -ErrorAction Stop
-          Move-Item $msi.FullName ../../artifacts/rustdesk-${{ env.VERSION }}-x86_64.msi
+          Move-Item $msi.FullName ../../artifacts/everywhere-${{ env.VERSION }}-x86_64.msi
           Pop-Location
 
       - name: Upload Windows EXE and MSI
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: mydesk-windows-x64
+          name: everywhere-windows-x64
           path: |
             artifacts/*.exe
             artifacts/*.msi
