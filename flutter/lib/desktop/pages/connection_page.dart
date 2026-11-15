@@ -155,6 +155,11 @@ class _OnlineStatusWidgetState extends State<OnlineStatusWidget> {
 
   _buildConnStatusMsg() {
     widget.onSvcStatusChanged?.call();
+    if (!_svcStopped.value &&
+        stateGlobal.svcStatus.value == SvcStatus.serverNotConfigured) {
+      return Text(translate("Server not configured"),
+          style: TextStyle(fontSize: em));
+    }
     return Text(
       _svcStopped.value
           ? translate("Service is not running")
@@ -171,7 +176,9 @@ class _OnlineStatusWidgetState extends State<OnlineStatusWidget> {
     final status =
         jsonDecode(await bind.mainGetConnectStatus()) as Map<String, dynamic>;
     final statusNum = status['status_num'] as int;
-    if (statusNum == 0) {
+    if (statusNum == -2) {
+      stateGlobal.svcStatus.value = SvcStatus.serverNotConfigured;
+    } else if (statusNum == 0) {
       stateGlobal.svcStatus.value = SvcStatus.connecting;
     } else if (statusNum == -1) {
       stateGlobal.svcStatus.value = SvcStatus.notReady;

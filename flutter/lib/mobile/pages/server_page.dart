@@ -480,12 +480,14 @@ class ServerInfo extends StatelessWidget {
     }
 
     Widget ConnectionStateNotification() {
-      if (serverModel.connectStatus == -1) {
+      if (serverModel.connectStatus < 0) {
         return Row(children: [
           const Icon(Icons.warning_amber_sharp,
                   color: colorNegative, size: iconSize)
               .marginOnly(right: iconMarginRight),
-          Expanded(child: Text(translate('not_ready_status')))
+          Expanded(child: Text(translate(serverModel.connectStatus == -2
+              ? 'Server not configured'
+              : 'not_ready_status')))
         ]);
       } else if (serverModel.connectStatus == 0) {
         return Row(children: [

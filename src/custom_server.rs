@@ -9,6 +9,8 @@ use hbb_common::{
 };
 use serde_derive::{Deserialize, Serialize};
 
+// everywhere keeps filename-based server configuration available while its own
+// hbbs/hbbr deployment is pending; users must also be able to edit ID/Relay Server.
 #[derive(Debug, PartialEq, Default, Serialize, Deserialize, Clone)]
 pub struct CustomServer {
     #[serde(default)]

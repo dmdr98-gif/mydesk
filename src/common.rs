@@ -736,9 +736,12 @@ pub fn test_nat_type() {
 
 #[tokio::main(flavor = "current_thread")]
 async fn test_nat_type_() -> ResultType<bool> {
+    let server1 = Config::get_rendezvous_server();
+    if server1.is_empty() {
+        return Ok(false);
+    }
     log::info!("Testing nat ...");
     let start = std::time::Instant::now();
-    let server1 = Config::get_rendezvous_server();
     let server2 = crate::increase_port(&server1, -1);
     let mut msg_out = RendezvousMessage::new();
     let serial = Config::get_serial();
@@ -1308,7 +1311,7 @@ fn get_api_server_(api: String, custom: String) -> String {
             return format!("http://{}", s);
         }
     }
-    "https://admin.rustdesk.com".to_owned()
+    config::API_SERVER.to_owned()
 }
 
 #[inline]
@@ -1453,7 +1456,11 @@ fn tcp_proxy_log_target(url: &str) -> String {
 
 #[inline]
 fn get_tcp_proxy_addr() -> String {
-    check_port(Config::get_rendezvous_server(), RENDEZVOUS_PORT)
+    let server = Config::get_rendezvous_server();
+    if server.is_empty() {
+        return server;
+    }
+    check_port(server, RENDEZVOUS_PORT)
 }
 
 /// Send an HTTP request via the rendezvous server's TCP proxy using protobuf.
