@@ -7,6 +7,11 @@ RustDesk의 원저작권 및 제3자 고지를 유지하고 AGPL-3.0에 따라 �
 [라이선스 전문](LICENCE), [오픈소스 고지](NOTICE.md),
 [업스트림 기준](UPSTREAM.md), [브랜딩 예외 및 확인 항목](branding/ALLOWLIST.md)을 참고하세요.
 
+everywhere 사용·검증 안내: [연결 설정](docs/everywhere-connect.md),
+[서버 없는 PC·Android 테스트](docs/serverless-testing.ko.md),
+[개발 검사](docs/local-checks.md), [가상 디스플레이](docs/virtual-display.md),
+[터미널](docs/terminal.md). 자체 서버와 업데이트 서비스는 아직 운영되지 않습니다.
+
 아래는 출처와 빌드 참고를 위해 보존한 **업스트림 RustDesk README**입니다.
 아래의 다운로드·서버·커뮤니티 링크는 업스트림을 가리킵니다.
 

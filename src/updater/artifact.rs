@@ -104,6 +104,9 @@ pub(super) fn verified_update_artifact_from_release_page_url(
     update_url: &str,
     query: &UpdateArtifactQuery<'_>,
 ) -> ResultType<VerifiedUpdateArtifact> {
+    if !crate::common::EVERYWHERE_UPDATES_ENABLED {
+        bail!("Automatic updates are not configured for everywhere");
+    }
     let release_id = release_id_from_update_url(update_url)?;
     let display_version = display_version_from_release_id(&release_id)?;
     let expected_artifact_url_prefix =
@@ -210,6 +213,19 @@ fn is_plain_update_filename(filename: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn everywhere_rejects_online_updates_without_fetching_metadata() {
+        let query = current_update_artifact_query(false);
+        let result = verified_update_artifact_from_release_page_url(
+            "https://github.com/rustdesk/rustdesk/releases/tag/v99.0.0",
+            &query,
+        );
+        assert_eq!(
+            result.err().unwrap().to_string(),
+            "Automatic updates are not configured for everywhere"
+        );
+    }
 
     #[test]
     fn update_download_file_accepts_expected_github_asset_urls() {

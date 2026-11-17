@@ -33,6 +33,9 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Check Korean localization
+        run: python3 scripts/check-localization.py
+
       - name: Install prerequisites
         run: |
           sudo apt-get install ca-certificates -y

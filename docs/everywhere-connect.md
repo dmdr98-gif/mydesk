@@ -6,6 +6,11 @@ everywhere의 자체 hbbs/hbbr 서버는 아직 배포되지 않았습니다. �
 상대를 찾을 수 없지만, 같은 LAN에서 직접 IP로 접속할 수 있습니다.
 설정의 **ID/릴레이 서버** 메뉴는 계속 사용할 수 있습니다.
 
+서버 없이 시작하려면 [Windows PC·Android 실기 확인표](serverless-testing.ko.md)를
+따릅니다. 현재 제품 빌드 대상은 Windows x64와 Android arm64입니다. Linux/macOS의
+권한·Wayland 관련 업스트림 코드는 남아 있지만 everywhere 배포와 실기는 확인하지
+않았습니다. 해당 플랫폼의 안내 링크도 이 문서로 연결하며 지원 완료를 뜻하지 않습니다.
+
 ## 자체 서버 설정
 
 접속하는 Android와 접속을 받는 Windows에 같은 서버 정보를 입력합니다.
@@ -91,3 +96,15 @@ APK 서명, `com.everywhere.app` applicationId, arm64 ABI와 Rust 라이브러�
 따라서 공개 데모 서버 주소·공개키와 `https://admin.rustdesk.com` API 주소를
 기본값에서 제거했습니다. 자체 서버가 준비될 때까지는 운영자가 제공한 서버를
 설정하거나 LAN 직접 IP 접속을 사용합니다.
+
+## 업데이트·소스·정책 안내
+
+자체 업데이트 서비스와 신뢰키가 준비될 때까지 앱의 자동/수동 온라인 업데이트
+확인과 메타데이터 다운로드를 비활성화합니다. 기존 업데이트 옵션이 저장돼 있어도
+RustDesk 버전 확인 API로 요청하지 않습니다. 새 버전 설치는 운영자가 제공한
+everywhere 설치파일로 진행하며 Android 덮어쓰기에는 같은 서명키가 필요합니다.
+
+앱의 소스·도움말·라이선스 링크는 [everywhere 저장소](https://github.com/dmdr98-gif/mydesk),
+[AGPL-3.0](../LICENCE), [오픈소스 고지](../NOTICE.md)로 연결합니다. 제품 개인정보
+처리방침과 운영 웹사이트는 아직 확정되지 않아 RustDesk 정책 페이지를 제품 정책으로
+표시하지 않습니다. 정식 배포 전에 운영 정책을 확정해야 합니다.

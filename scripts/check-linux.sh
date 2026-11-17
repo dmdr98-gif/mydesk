@@ -9,6 +9,9 @@ cd -- "$repo_root" || exit 1
 # The box's rustup toolchain is not always on PATH.
 if [[ -d /home/box/apps/rust/cargo/bin ]]; then
     export PATH="/home/box/apps/rust/cargo/bin:$PATH"
+    if [[ -z ${RUSTUP_HOME:-} && -d /home/box/apps/rust/rustup ]]; then
+        export RUSTUP_HOME=/home/box/apps/rust/rustup
+    fi
 fi
 
 results=()
@@ -33,6 +36,7 @@ run_step() {
     fi
 }
 
+run_step 'Korean localization' python3 scripts/check-localization.py
 run_step 'cargo check -p hbb_common' cargo check -p hbb_common
 # socket_client::tests::test_test_if_valid_server expects DNS lookup of "a" to fail.
 # Sandboxed/proxied networks (like the box) resolve every name, so it is skipped by default.

@@ -2528,8 +2528,8 @@ impl<T: InvokeUiSession> Remote<T> {
                 },
                 Some(message::Union::MessageBox(msgbox)) => {
                     let mut link = msgbox.link;
-                    if let Some(v) = config::HELPER_URL.get(&link as &str) {
-                        link = v.to_string();
+                    if config::HELPER_URL.contains_key(&link as &str) {
+                        link = crate::common::EVERYWHERE_HELP_URL.to_owned();
                     } else {
                         log::warn!("Message box ignore link {} for security", &link);
                         link = "".to_string();

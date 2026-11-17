@@ -30,6 +30,7 @@ import 'package:window_size/window_size.dart' as window_size;
 
 import '../consts.dart';
 import 'common/widgets/overlay.dart';
+import 'common/product_links.dart';
 import 'mobile/pages/file_manager_page.dart';
 import 'mobile/pages/remote_page.dart';
 import 'mobile/pages/view_camera_page.dart';
@@ -1604,6 +1605,9 @@ Future<void> initGlobalFFI() async {
 }
 
 String translate(String name) {
+  if (name.startsWith('doc_')) {
+    return kProductHelpUrl;
+  }
   if (name.startsWith('Failed to') && name.contains(': ')) {
     return name.split(': ').map((x) => translate(x)).join(': ');
   }
@@ -3778,12 +3782,12 @@ Widget loadPowered(BuildContext context) {
     cursor: SystemMouseCursors.click,
     child: GestureDetector(
       onTap: () {
-        launchUrl(Uri.parse('https://rustdesk.com'));
+        launchUrl(Uri.parse(kProductNoticesUrl));
       },
       child: Opacity(
           opacity: 0.5,
           child: Text(
-            translate("powered_by_me"),
+            'RustDesk · AGPL-3.0',
             overflow: TextOverflow.clip,
             style: Theme.of(context)
                 .textTheme

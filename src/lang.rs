@@ -203,6 +203,9 @@ pub fn translate(name: String) -> String {
 }
 
 pub fn translate_locale(name: String, locale: &str) -> String {
+    if matches!(name.as_str(), "doc_mac_permission" | "doc_fix_wayland") {
+        return crate::common::EVERYWHERE_HELP_URL.to_owned();
+    }
     let lang = resolve_lang(
         &hbb_common::config::LocalConfig::get_option("lang"),
         locale,
@@ -335,6 +338,18 @@ fn extract_placeholder(input: &str) -> (String, Option<String>) {
 }
 
 mod test {
+    #[test]
+    fn product_help_links_do_not_depend_on_the_translation_locale() {
+        for locale in ["ko-KR", "en-US", "de-DE"] {
+            for key in ["doc_mac_permission", "doc_fix_wayland"] {
+                assert_eq!(
+                    super::translate_locale(key.to_owned(), locale),
+                    crate::common::EVERYWHERE_HELP_URL
+                );
+            }
+        }
+    }
+
     #[test]
     fn test_extract_placeholders() {
         use super::extract_placeholder as f;

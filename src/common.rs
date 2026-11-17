@@ -57,6 +57,9 @@ pub const PLATFORM_WINDOWS: &str = "Windows";
 pub const PLATFORM_LINUX: &str = "Linux";
 pub const PLATFORM_MACOS: &str = "Mac OS";
 pub const PLATFORM_ANDROID: &str = "Android";
+pub(crate) const EVERYWHERE_UPDATES_ENABLED: bool = false;
+pub const EVERYWHERE_HELP_URL: &str =
+    "https://github.com/dmdr98-gif/mydesk/blob/master/docs/everywhere-connect.md";
 
 pub const TIMER_OUT: Duration = Duration::from_secs(1);
 pub(crate) const API_LOG_INTERVAL: Duration = Duration::from_secs(600);
@@ -1061,13 +1064,8 @@ pub fn is_modifier(evt: &KeyEvent) -> bool {
 }
 
 pub fn check_software_update() {
-    if is_custom_client() {
-        return;
-    }
-    let opt = LocalConfig::get_option(keys::OPTION_ENABLE_CHECK_UPDATE);
-    if config::option2bool(keys::OPTION_ENABLE_CHECK_UPDATE, &opt) {
-        std::thread::spawn(move || allow_err!(do_check_software_update()));
-    }
+    // No product update service or signing key has been configured yet.
+    clear_software_update_url();
 }
 
 pub(crate) fn release_id_from_update_url(update_url: &str) -> ResultType<String> {
@@ -1176,53 +1174,9 @@ fn process_software_update_check_response(bytes: Bytes) -> ResultType<()> {
     Ok(())
 }
 
-// No need to check `danger_accept_invalid_cert` for now.
-// Because the url is always `https://api.rustdesk.com/version/latest`.
-#[tokio::main(flavor = "current_thread")]
-pub async fn do_check_software_update() -> hbb_common::ResultType<()> {
-    let (request, url) =
-        hbb_common::version_check_request(hbb_common::VER_TYPE_RUSTDESK_CLIENT.to_string());
-    let proxy_conf = Config::get_socks();
-    let tls_url = get_url_for_tls(&url, &proxy_conf);
-    let tls_type = get_cached_tls_type(tls_url);
-    let is_tls_not_cached = tls_type.is_none();
-    let tls_type = tls_type.unwrap_or(TlsType::Rustls);
-    let client = create_http_client_async(tls_type, false);
-    let latest_release_response: ResultType<_> = match client.post(&url).json(&request).send().await
-    {
-        Ok(resp) => Ok((tls_type, resp)),
-        Err(err) => {
-            if is_tls_not_cached && err.is_request() {
-                let tls_type = TlsType::NativeTls;
-                let client = create_http_client_async(tls_type, false);
-                match client.post(&url).json(&request).send().await {
-                    Ok(resp) => Ok((tls_type, resp)),
-                    Err(err) => Err(err.into()),
-                }
-            } else {
-                Err(err.into())
-            }
-        }
-    };
-    let response_bytes = match latest_release_response {
-        Ok((used_tls_type, response)) => {
-            upsert_tls_cache(tls_url, used_tls_type, false);
-            let status = response.status();
-            if !status.is_success() {
-                Err(anyhow!(
-                    "Software update check failed with HTTP status: {status}"
-                ))
-            } else {
-                response.bytes().await.map_err(|err| err.into())
-            }
-        }
-        Err(err) => Err(err),
-    };
-    let result = response_bytes.and_then(process_software_update_check_response);
-    if result.is_err() {
-        clear_software_update_url();
-    }
-    result
+pub fn do_check_software_update() -> hbb_common::ResultType<()> {
+    check_software_update();
+    Ok(())
 }
 
 #[inline]
@@ -3122,6 +3076,20 @@ mod tests {
         let too_long = "a".repeat(129);
         for uuid in ["", "\r\nPING\r\n", "a b", "a\0", too_long.as_str()] {
             assert!(check_relay_uuid(uuid).is_err(), "accepted {uuid:?}");
+        }
+    }
+
+    #[test]
+    fn everywhere_update_checks_discard_stale_update_offers() {
+        for manual in [false, true] {
+            *SOFTWARE_UPDATE_URL.lock().unwrap() =
+                "https://github.com/rustdesk/rustdesk/releases/tag/v99.0.0".to_owned();
+            if manual {
+                do_check_software_update().unwrap();
+            } else {
+                check_software_update();
+            }
+            assert!(SOFTWARE_UPDATE_URL.lock().unwrap().is_empty());
         }
     }
 
