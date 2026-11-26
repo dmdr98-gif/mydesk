@@ -151,11 +151,12 @@ class _TailscaleAccessCardState extends State<TailscaleAccessCard> {
     if (host == null || !mounted) return;
     try {
       await bind.mainSetLocalOption(key: _hostOption, value: host.target);
-      if (mounted)
+      if (mounted) {
         setState(() {
           _host = host;
           _status = null;
         });
+      }
     } catch (e) {
       debugPrint('Failed to save Tailscale home PC: $e');
       if (mounted) setState(() => _status = 'Failed');
@@ -166,9 +167,7 @@ class _TailscaleAccessCardState extends State<TailscaleAccessCard> {
     Socket? socket;
     try {
       if (await _vpnStatus() != 'cgnat-vpn') return false;
-      final address = Uri.parse('tcp://${host.target}');
-      socket = await Socket.connect(address.host,
-          address.hasPort ? address.port : TailscaleEndpoint.defaultPort,
+      socket = await Socket.connect(host.address, host.port,
           timeout: const Duration(seconds: 1));
       return true;
     } on SocketException {
@@ -195,9 +194,10 @@ class _TailscaleAccessCardState extends State<TailscaleAccessCard> {
     });
     try {
       if (await _proxyIsConfigured()) {
-        if (mounted)
+        if (mounted) {
           setState(() => _status =
               'Turn off the SOCKS5 proxy in settings before using Tailscale remote access.');
+        }
         return;
       }
       final vpnStatus = await _vpnStatus();
@@ -206,15 +206,13 @@ class _TailscaleAccessCardState extends State<TailscaleAccessCard> {
         // Android cannot identify another app's VPN owner. Leave an existing
         // VPN in place and let the user choose Tailscale in its own app.
         if (vpnStatus == 'other-vpn') {
-          if (mounted)
-            setState(() => _status =
-                'A VPN is already active. Open Tailscale to check the connection, then try again.');
+          setState(() => _status =
+              'A VPN is already active. Open Tailscale to check the connection, then try again.');
           return;
         }
         if (vpnStatus != 'none') {
-          if (mounted)
-            setState(() => _status =
-                'Tailscale VPN connection could not be verified. Open Tailscale and try again.');
+          setState(() => _status =
+              'Tailscale VPN connection could not be verified. Open Tailscale and try again.');
           return;
         }
         if (!await gFFI.invokeMethod('connect_tailscale')) {
@@ -232,9 +230,10 @@ class _TailscaleAccessCardState extends State<TailscaleAccessCard> {
             WidgetsBinding.instance.lifecycleState ==
                 AppLifecycleState.resumed) {
           if (await _proxyIsConfigured()) {
-            if (mounted)
+            if (mounted) {
               setState(() => _status =
                   'Turn off the SOCKS5 proxy in settings before using Tailscale remote access.');
+            }
             return;
           }
           if (await _vpnStatus() != 'cgnat-vpn') continue;
@@ -247,9 +246,10 @@ class _TailscaleAccessCardState extends State<TailscaleAccessCard> {
         }
         await Future<void>.delayed(const Duration(milliseconds: 400));
       }
-      if (mounted)
+      if (mounted) {
         setState(() => _status =
             'PC is not reachable. Check Tailscale on both devices and direct IP access on the PC, then try again.');
+      }
     } catch (e) {
       debugPrint('Failed to connect Tailscale home PC: $e');
       if (mounted) setState(() => _status = 'Failed');
@@ -261,11 +261,12 @@ class _TailscaleAccessCardState extends State<TailscaleAccessCard> {
   Future<void> _forgetHost() async {
     try {
       await bind.mainSetLocalOption(key: _hostOption, value: '');
-      if (mounted)
+      if (mounted) {
         setState(() {
           _host = null;
           _status = null;
         });
+      }
     } catch (e) {
       debugPrint('Failed to forget Tailscale home PC: $e');
       if (mounted) setState(() => _status = 'Failed');
