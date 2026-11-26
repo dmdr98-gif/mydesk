@@ -12,6 +12,10 @@ import '../../models/platform_model.dart';
 import '../widgets/dialog.dart';
 
 class ScanPage extends StatefulWidget {
+  const ScanPage({Key? key, this.returnResult = false}) : super(key: key);
+
+  final bool returnResult;
+
   @override
   State<ScanPage> createState() => _ScanPageState();
 }
@@ -20,6 +24,14 @@ class _ScanPageState extends State<ScanPage> {
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   StreamSubscription? scanSubscription;
+  bool _returning = false;
+
+  void _returnScannedValue(String data) {
+    if (_returning || !mounted) return;
+    _returning = true;
+    controller?.pauseCamera();
+    Navigator.pop(context, data);
+  }
 
   @override
   void reassemble() {
@@ -35,7 +47,7 @@ class _ScanPageState extends State<ScanPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scan QR'),
+        title: Text(translate('Scan QR')),
         actions: [
           _buildImagePickerButton(),
           _buildFlashToggleButton(),
@@ -71,7 +83,11 @@ class _ScanPageState extends State<ScanPage> {
     });
     scanSubscription = controller.scannedDataStream.listen((scanData) {
       if (scanData.code != null) {
-        showServerSettingFromQr(scanData.code!);
+        if (widget.returnResult) {
+          _returnScannedValue(scanData.code!);
+        } else {
+          showServerSettingFromQr(scanData.code!);
+        }
       }
     });
   }
@@ -97,6 +113,10 @@ class _ScanPageState extends State<ScanPage> {
 
         var reader = QRCodeReader();
         var result = reader.decode(bitmap);
+        if (widget.returnResult) {
+          _returnScannedValue(result.text);
+          return;
+        }
         if (result.text.startsWith(bind.mainUriPrefixSync())) {
           handleUriLink(uriString: result.text);
         } else {

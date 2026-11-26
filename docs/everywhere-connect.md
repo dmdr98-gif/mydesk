@@ -7,7 +7,8 @@ everywhere의 자체 hbbs/hbbr 서버는 아직 배포되지 않았습니다. �
 설정의 **ID/릴레이 서버** 메뉴는 계속 사용할 수 있습니다.
 
 서버 없이 시작하려면 [Windows PC·Android 실기 확인표](serverless-testing.ko.md)를
-따릅니다. 현재 제품 빌드 대상은 Windows x64와 Android arm64입니다. Linux/macOS의
+따릅니다. 집 밖에서는 [Tailscale 원격 접속](tailscale.ko.md)을 설정할 수 있습니다.
+현재 제품 빌드 대상은 Windows x64와 Android arm64입니다. Linux/macOS의
 권한·Wayland 관련 업스트림 코드는 남아 있지만 everywhere 배포와 실기는 확인하지
 않았습니다. 해당 플랫폼의 안내 링크도 이 문서로 연결하며 지원 완료를 뜻하지 않습니다.
 

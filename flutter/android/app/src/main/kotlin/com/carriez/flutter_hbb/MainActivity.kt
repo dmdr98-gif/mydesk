@@ -290,6 +290,9 @@ class MainActivity : FlutterActivity() {
             if (documentPicker.handle(call, result)) return@setMethodCallHandler
             // make sure result will be invoked, otherwise flutter will await forever
             when (call.method) {
+                "open_tailscale" -> result.success(TailscaleLauncher.open(this))
+                "connect_tailscale" -> result.success(TailscaleLauncher.connect(this))
+                "tailscale_vpn_status" -> result.success(TailscaleLauncher.vpnStatus(this))
                 "init_service" -> {
                     Intent(activity, MainService::class.java).also {
                         bindService(it, serviceConnection, Context.BIND_AUTO_CREATE)
